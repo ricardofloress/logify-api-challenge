@@ -1,0 +1,39 @@
+services:
+  api:
+    image: lodgify/movies-api:3
+    ports:
+      - "7172:80"
+      - "7443:443"
+    environment:      
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/aspnetapp.pfx
+    networks:
+      - cinema_net
+  
+  cinemaapp:
+    container_name: cinemaapp
+    build:
+      context: .
+      dockerfile: ApiApplication/Dockerfile
+    volumes:
+      - ./ApiApplication:/src
+    ports:
+      - "5000:80"
+      - "5001:443"
+    depends_on:
+      - api
+    networks:
+      - cinema_net
+  
+  cache:
+    image: "redis"
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - cinema_net
+
+networks:
+  cinema_net:

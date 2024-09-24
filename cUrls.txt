@@ -1,0 +1,160 @@
+Please add the cURLs of your tests here:
+
+CREATE SHOWTIME:
+
+In case of Movie not found:
+
+    curl --location 'http://localhost:5000/showtime/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "movieId": "ID-test12",
+        "sessionDate": "2024-05-11",
+        "auditoriumId": 1
+    }'
+
+In case of Auditorium not available:
+
+    curl --location 'http://localhost:5000/showtime/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "movieId": "ID-test1",
+        "sessionDate": "2023-01-01",
+        "auditoriumId": 1
+    }'
+
+In case of Success:
+
+    curl --location 'http://localhost:5000/showtime/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "movieId": "ID-test1",
+        "sessionDate": "2024-01-02",
+        "auditoriumId": 1
+    }'
+    
+-----------------------------------------------------------------------------------------------------
+ 
+ 
+ 
+CREATE TICKET RESERVATION:
+
+In case of ticket without seats:
+
+    curl --location 'http://localhost:5000/ticket/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "showtimeId": 1,
+        "seats":[]
+    }'
+
+In case of showtime not found:
+
+    curl --location 'http://localhost:5000/ticket/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "showtimeId": 21,
+        "seats":[
+            {
+                "row": 1,
+                "seatNumber":1
+            },
+               {
+                "row": 1,
+                "seatNumber": 2
+            }
+        ]
+    }'
+
+In case of seats not contiguous:
+
+    curl --location 'http://localhost:5000/ticket/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "showtimeId": 1,
+        "seats":[
+            {
+                "row": 1,
+                "seatNumber":1
+            },
+               {
+                "row": 1,
+                "seatNumber": 3
+            }
+        ]
+    }'
+
+In case of ticket seats already reserved:
+
+    curl --location 'http://localhost:5000/ticket/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "showtimeId": 1,
+        "seats":[
+            {
+                "row": 1,
+                "seatNumber":3
+            },
+               {
+                "row": 1,
+                "seatNumber": 4
+            }
+        ]
+    }'
+
+In case of ticket sold:
+
+    curl --location 'http://localhost:5000/ticket/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "showtimeId": 1,
+        "seats":[
+            {
+                "row": 1,
+                "seatNumber": 5
+            }
+        ]
+    }'
+
+In case of Success(Added a ticket expired in sample data to see if it would consider the expired ticket):
+
+    curl --location 'http://localhost:5000/ticket/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "showtimeId": 1,
+        "seats":[
+            {
+                "row": 1,
+                "seatNumber":1
+            },
+               {
+                "row": 1,
+                "seatNumber": 2
+            }
+        ]
+    }'
+    
+-----------------------------------------------------------------------------------------------------
+ 
+
+
+CREATE TICKET CONFIRMATION(Added ticket to sample data to make this tests faster):
+ 
+In case of Ticket not found:
+
+    curl --location --request PUT 'http://localhost:5000/ticket/confirmation/891e5112-e4a0-41c5-b6b5-91c6e1618a17' \
+    --data ''
+
+In case of Ticket expired:
+
+    curl --location --request PUT 'http://localhost:5000/ticket/confirmation/891e5112-e4a0-41c5-b6b5-91c6e1618a16' \
+    --data ''
+
+In case of Ticket already paid:
+
+    curl --location --request PUT 'http://localhost:5000/ticket/confirmation/891e5112-e4a0-41c5-b6b5-91c6e1618a18' \
+    --data ''
+ 
+In case of Success:
+
+    curl --location --request PUT 'http://localhost:5000/ticket/confirmation/891e5112-e4a0-41c5-b6b5-91c6e1618a17' \
+    --data ''
